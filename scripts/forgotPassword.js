@@ -1,4 +1,4 @@
-const form = document.getElementById("password-reset-form");
+const form = document.getElementById("forgot-password-form");
 const submitButton = document.getElementById("submit-button");
 const networkError = document.getElementById("network-error");
 const emailSent = document.getElementById("email-sent");
