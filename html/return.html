@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Thanks for your order!</title>
+  <link rel="stylesheet" href="../css/return.css">
+  <link rel="stylesheet" href="../css/all.css">
+</head>
+
+<body>
+  <nav id="side-nav">
+    <i class="fa-solid fa-2x fa-xmark close-icon" onclick="closeSideNav()"></i>
+    <ul>
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="./shop.html">Shop</a></li>
+    </ul>
+  </nav>
+  <nav id="top-nav">
+    <ul class="left">
+      <li class="show-on-small"><i id="bars-icon" class="fa-solid fa-2x fa-bars" onclick="openSideNav()"></i></li>
+      <li class="hide-on-x-small"><a href="../index.html" class="logo"><img src="https://applestooranges.s3.amazonaws.com/medium-logo.png"
+            alt="Apples to Oranges" width="1452" height="726"></a></li>
+      <li class="show-on-x-small"><a href="../index.html" class="logo"><img src="https://applestooranges.s3.amazonaws.com/face-logo.png"
+            alt="Apples to Oranges" width="2048" height="2048"></a></li>
+    </ul>
+    <ul class="right">
+      <li id="small-account-list-item" class="show-on-small"><i id="account-icon" class="fa-solid fa-lg fa-user"></i>
+      </li>
+      <li class="hide-on-small"><a href="../index.html">Home</a></li>
+      <li class="hide-on-small"><a href="./shop.html">Shop</a></li>
+      <li id="account-list-item" class="hide-on-small"><button id="account-button">Sign up / Log in</button></li>
+    </ul>
+  </nav>
+
+  <div id="nav-gap"></div>
+
+  <div id="content">
+    <section id="success" class="hidden">
+      <h1>Thank you!</h1>
+      <p>
+        We appreciate your business! A confirmation email will be sent to <span id="customer-email"></span>.
+
+        If you have any questions, please email <a
+          href="mailto:applestoorangesbusiness@gmail.com">applestoorangesbusiness@gmail.com</a>.
+      </p>
+    </section>
+
+    <button><a href="../index.html">Back to Home</a></button>
+  </div>
+
+  <script src="../scripts/all.js"></script>
+  <script src="../scripts/return.js"></script>
+</body>
+
+</html>

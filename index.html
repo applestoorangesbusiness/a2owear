@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apples to Oranges</title>
+    <link rel="icon" type="image/x-icon" href="https://applestooranges.s3.amazonaws.com/face-logo.png">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/all.css">
+</head>
+
+<body>
+    <nav id="side-nav">
+        <i class="fa-solid fa-2x fa-xmark close-icon" onclick="closeSideNav()"></i>
+        <ul>
+            <li class="selected"><a>Home</a></li>
+            <li><a href="html/shop.html">Shop</a></li>
+        </ul>
+    </nav>
+    <nav id="top-nav">
+        <ul class="left">
+            <li class="show-on-small"><i id="bars-icon" class="fa-solid fa-2x fa-bars" onclick="openSideNav()"></i></li>
+            <li class="hide-on-x-small"><a href="index.html" class="logo"><img src="https://applestooranges.s3.amazonaws.com/medium-logo.png"
+                        alt="Apples to Oranges" width="1452" height="726"></a></li>
+            <li class="show-on-x-small"><a href="index.html" class="logo"><img src="https://applestooranges.s3.amazonaws.com/face-logo.png"
+                        alt="Apples to Oranges" width="2048" height="2048"></a></li>
+        </ul>
+        <ul class="right">
+            <li id="small-account-list-item" class="show-on-small"><i id="account-icon"
+                    class="fa-solid fa-lg fa-user"></i></li>
+            <li class="selected hide-on-small"><a>Home</a></li>
+            <li class="hide-on-small"><a href="html/shop.html">Shop</a></li>
+            <li id="account-list-item" class="hide-on-small"><button id="account-button">Sign up / Log in</button></li>
+            <li><i class="fa-solid fa-lg fa-cart-shopping" onclick="openShoppingCartMenu()"></i></li>
+        </ul>
+    </nav>
+    <menu id="shopping-cart">
+        <i class="fa-solid fa-2x fa-xmark close-icon" onclick="closeShoppingCartMenu()"></i>
+        <div id="shopping-cart-items">
+        </div>
+    </menu>
+
+    <div id="nav-gap"></div>
+
+    <section id="title">
+        <div class="left"><img src="https://applestooranges.s3.amazonaws.com/face-logo.png" alt="Wesley the cat" width="2048" height="2048"></div>
+        <div class="right">
+            <img src="https://applestooranges.s3.amazonaws.com/large-text-logo.png" alt="Apples to Oranges" width="2112" height="528">
+            <div class="flex-break"></div>
+            <a id="shop-now-button" href="html/shop.html">shop now</a>
+        </div>
+    </section>
+    <section id="featured-products">
+        <div class="description">This is a super duper good description. I need more text to test it so im just writing
+            some more.</div>
+        <div class="carousel-div">
+            <img class="featured-product" src="https://applestooranges.s3.amazonaws.com/small-logo.png" width="2550" height="3300">
+            <img class="featured-product disabled" src="https://applestooranges.s3.amazonaws.com/medium-logo.png" width="1452" height="726">
+            <img class="featured-product disabled" src="https://applestooranges.s3.amazonaws.com/large-logo.png" width="2112" height="462">
+            <button class="left" onclick='plusDivs(-1, "featured-product", true)'>&#10094;</button>
+            <button class="right" onclick='plusDivs(+1, "featured-product", true)'>&#10095;</button>
+        </div>
+    </section>
+    <footer>
+        <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram fa-lg"></i></a>
+    </footer>
+
+    <script src="https://kit.fontawesome.com/faf318796c.js" crossorigin="anonymous"></script>
+    <script src="scripts/all.js"></script>
+    <script src="scripts/index.js"></script>
+</body>
+
+</html>

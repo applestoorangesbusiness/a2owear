@@ -1,0 +1,232 @@
+#title {
+    display: flex;
+    height: 25rem;
+    padding: 8rem 1rem;
+    max-width: 71rem;
+    margin: auto;
+    align-content: flex-start;
+}
+
+#title div {
+    width: 100%;
+    height: 100%;
+    margin-left: 1rem;
+}
+
+#title img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
+
+#title div.left {
+    flex-shrink: 3;
+    height: min-content;
+}
+
+#title div.right {
+    flex-shrink: 2;
+    height: min-content;
+    padding-left: 3rem;
+}
+
+#title div.left img {
+    margin-bottom: 2rem;
+}
+
+#title div.right img {
+    height: min-content;
+    padding: 5vw 0rem 1vw 0rem;
+}
+
+#title div.right #shop-now-button {
+    padding: 0.5rem 1rem;
+    border-width: 1px;
+    border-radius: 0.25rem;
+    font-size: medium;
+    cursor: pointer;
+    background-color: #4b5253;
+    border-color: #4b5253;
+    border-style: solid;
+    color: #fffae4;
+    transition: 0.2s;
+    margin: 1rem 0;
+    text-decoration: none;
+}
+
+#title div.right #shop-now-button:hover {
+    color: #4b5253;
+    background-color: #fffae4;
+    border-color: #3e4444;
+    transition: 0.2s;
+}
+
+#title div.right #shop-now-button:active {
+    color: #4b5253;
+    background-color: #FFDDB0;
+    border-color: #303535;
+    transition: 0.2s;
+}
+
+#featured-products {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    height: calc(25vw + 5rem);
+    background-color: #E59867;
+    padding: 1rem 0rem;
+}
+
+#featured-products div {
+    color: #fffae4;
+    font-size: large;
+    padding: 0rem 1rem;
+}
+
+#featured-products div.description {
+    width: 30vw;
+    min-height: min-content;
+    max-width: 100%;
+    margin-left: auto;
+    margin-bottom: 4rem;
+    align-self: center;
+}
+
+#featured-products div.carousel-div {
+    position: relative;
+    width: 43vw;
+    max-width: 100%;
+    margin-right: auto;
+}
+
+#featured-products div.carousel-div img {
+    position: absolute;
+    object-fit: cover;
+    width: 43vw;
+    height: 100%;
+    transition: opacity 1s ease-out;
+    -webkit-transition: opacity 1s ease-out;  
+    -moz-transition: opacity 1s ease-in-out;   
+}
+
+#featured-products div.carousel-div img.disabled {
+    opacity: 0; 
+}
+
+#featured-products div.carousel-div button {
+    cursor: pointer;
+    position: absolute;
+    z-index: 2;
+    border-radius: 2rem;
+    font-size: medium;
+    width: 3rem;
+    height: 3rem;
+    background-color: #4b5253;
+    border-width: 0;
+    color: #fffae4;
+    transition: 0.2s;
+    opacity: 0.6;
+}
+
+#featured-products div.carousel-div button:hover {
+    color: #4b5253;
+    background-color: #fffae4;
+    border-color: #3e4444;
+    transition: 0.2s;
+}
+
+#featured-products div.carousel-div button:active {
+    color: #4b5253;
+    background-color: #FFDDB0;
+    border-color: #303535;
+    transition: 0.2s;
+}
+
+#featured-products div.carousel-div button.left {
+    top: 50%;
+    left: 0%;
+    transform: translate(0%,-50%);
+}
+
+#featured-products div.carousel-div button.right {
+    top: 50%;
+    right: 0%;
+    transform: translate(0%,-50%);
+}
+
+@media screen and (max-width: 40rem) {
+    #title {
+        flex-wrap: wrap;
+    }
+
+    #title div.left {
+        display: flex;
+        align-items: center;
+        margin: 0;
+    }
+
+    #title div.right {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 0;
+        margin: 0;
+    }
+
+    #title div.left img {
+        max-width: 10rem;
+        height: min-content;
+        margin: auto;
+    }
+
+    #title div.right img {
+        padding: 0;
+        max-width: 16rem;
+        content: url("https://applestooranges.s3.amazonaws.com/medium-text-logo.png");
+    }
+
+    #title div.right .flex-break {
+        flex-basis: 100%;
+        height: 0;
+    }
+
+    #title div.right #shop-now-button {
+        margin: 1rem 0rem;
+        transition: none;
+    }
+
+    #featured-products {
+        flex-wrap: wrap;
+        align-items: center;
+        height: 100%;
+        min-height: fit-content;
+    }
+
+    #featured-products div.description {
+        width: 60vw;
+        min-height: min-content;
+        max-width: 100%;
+        margin: 3rem auto 3rem auto;
+    }
+
+    #featured-products div.carousel-div {
+        display: flex;
+        justify-content: center;
+        margin: auto 4rem;
+        margin-bottom: 3rem;
+        padding: 0rem;
+        width: 100%;
+        height: 16rem;
+    }
+
+    #featured-products div.carousel-div img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+@media screen and (max-width: 20rem) {
+    #title div.right #shop-now-button {
+        font-size: small;
+    }
+}

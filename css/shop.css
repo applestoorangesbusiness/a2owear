@@ -1,0 +1,277 @@
+#designs {
+    display: grid;
+    gap: 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    margin: 0 6rem;
+    margin-bottom: auto;
+}
+
+.design {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 16rem;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.design img {
+    object-fit: contain;
+    width: 100%;
+    height: fit-content;
+}
+
+.design h1 {
+    margin-top: auto;
+    height: min-content;
+    min-width: min-content;
+}
+
+.design:hover h1 {
+    font-weight: bold;
+    text-decoration-line: underline;
+    text-underline-offset: 0.5rem;
+    text-decoration-thickness: 0.125rem;
+    text-decoration-color: #E59867;
+}
+
+#shop-popup.popup {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 4rem;
+    gap: 1rem;
+    max-height: 90%;
+}
+
+.popup .carousel-div {
+    position: relative;
+    max-width: 100%;
+    max-height: 100%;
+    margin-left: 2rem;
+    margin-right: 0;
+    padding: 0 1rem;
+    width: calc(16vw + 8rem);
+    height: calc(20vw + 10rem);
+    max-width: calc(56vh - 4rem);
+    max-height: calc(70vh - 5rem);
+}
+
+.popup .carousel-div img {
+    position: absolute;
+    object-fit: contain;
+    width: min-content;
+    height: 100%;
+    transition: opacity 1s ease-out;
+    -webkit-transition: opacity 1s ease-out;  
+    -moz-transition: opacity 1s ease-in-out;
+    width: calc(16vw + 8rem);
+    height: calc(20vw + 10rem);
+    max-width: calc(56vh - 4rem);
+    max-height: calc(70vh - 5rem);
+}
+
+.popup .carousel-div img.disabled {
+    opacity: 0; 
+}
+
+.popup .carousel-div button {
+    cursor: pointer;
+    position: absolute;
+    z-index: 2;
+    border-radius: 2rem;
+    font-size: small;
+    width: 2rem;
+    height: 2rem;
+    background-color: #4b5253;
+    border-width: 0;
+    color: #fffae4;
+    transition: 0.2s;
+    opacity: 0.8;
+}
+
+.popup .carousel-div button:hover {
+    color: #4b5253;
+    background-color: #fffae4;
+    border-color: #3e4444;
+    transition: 0.2s;
+}
+
+.popup .carousel-div button:active {
+    color: #4b5253;
+    background-color: #FFDDB0;
+    border-color: #303535;
+    transition: 0.2s;
+}
+
+.popup .carousel-div button {
+    top: 50%;
+    transform: translate(0%, calc(-50% + 0.5rem));
+}
+
+.popup .carousel-div button.left {
+    left: 0%;
+}
+
+.popup .carousel-div button.right {
+    right: 0%;
+}
+
+.popup div.right {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin: 0;
+    padding: 0 1rem;
+    gap: 1rem;
+}
+
+.popup div.right h1 {
+    width: 100%;
+    height: min-content;
+    font-size: 4rem;
+    margin-top: -0.5rem;
+    margin-left: 0;
+    color: var(--white);
+}
+
+.popup div.right * {
+    color: var(--black);
+}
+
+.popup div.right select {
+    cursor: pointer;
+    width: min-content;
+    margin: 0;
+    font-size: 1.5rem;
+    background-color: var(--white);
+    border-width: 0;
+    border-radius: 0.25rem;
+    outline: none;
+    padding: 0 0.25rem;
+}
+
+#button-and-price {
+    margin: auto 0 0 0;
+    padding: 0;
+    display: flex;
+    gap: 2rem;
+}
+
+#button-and-price button {
+    display: block;
+    font-size: large;
+    cursor: pointer;
+    border: 1px solid var(--white);
+    border-radius: 0.25rem;
+    background-color: var(--orange);
+    color: var(--white);
+    transition: 0.2s;
+    padding: 0.5rem 1rem;
+}
+
+#button-and-price button:hover {
+    color: var(--orange);
+    background-color: var(--white);
+    border-color: var(--orange);
+    transition: 0.2s;
+}
+
+#button-and-price button:active {
+    border-width: 1px;
+    background-color: var(--orange);
+    border-color: var(--white);
+    color: var(--white);
+    transition: 0.2s;
+}
+
+#button-and-price button.disabled {
+    display: none;
+}
+
+#button-and-price p {
+    font-size: 1.25rem;
+    margin: 0.5rem 0;
+    color: var(--white);
+}
+
+@media screen and (max-width: 40rem) {
+    #designs {
+        margin: 0 2rem;
+    }
+
+    .design h1 {
+        font-size: 1.75rem;
+    }
+
+    #shop-popup.popup {
+        gap: 0.5rem;
+        padding: 1.5rem;
+    }
+
+    .popup .carousel-div {
+        margin: 0 auto;
+    }
+
+    .popup div.right {
+        margin: 1rem auto 0 auto;
+        gap: 0.75rem;
+        width: 100%;
+    }
+
+    .popup div.right h1 {
+        font-size: 3rem;
+        margin: 0 auto;
+        width: min-content;
+    }
+
+    .popup div.right select {
+        font-size: 1rem;
+        margin: 0 auto;
+    }
+
+    #button-and-price {
+        width: max-content;
+        margin: 0.5rem auto 0 auto;
+        gap: 1rem;
+
+    }
+
+    #button-and-price button {
+        padding: 0.25rem 0.5rem;
+        font-size: 1rem;
+    }
+
+    #button-and-price p {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 20rem) {
+    #designs {
+        grid-template-columns: 100%;
+    }
+
+    .design h1 {
+        font-size: 1.5rem;
+    }
+
+    #button-and-price {
+        width: max-content;
+        margin: 0.25rem auto 0 auto;
+        gap: 0.5rem;
+
+    }
+
+    #button-and-price button {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.75rem;
+    }
+
+    #button-and-price p {
+        font-size: 0.75rem;
+    }
+}
