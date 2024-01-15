@@ -1,7 +1,7 @@
 #designs {
     display: grid;
     gap: 3rem;
-    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
     margin: 0 6rem;
     margin-bottom: auto;
 }
@@ -12,7 +12,6 @@
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    max-width: 16rem;
     width: 100%;
     margin: 0 auto;
 }
@@ -39,25 +38,27 @@
 
 #shop-popup.popup {
     display: flex;
-    flex-wrap: wrap;
     overflow-y: auto;
     box-sizing: border-box;
-    padding: 4rem;
-    gap: 1rem;
+    padding: 4rem 2.5vw;
+    padding-right: 0;
+    gap: calc(2vw - 1rem);
     max-height: 90%;
+    min-height: 30rem;
 }
 
 .popup .carousel-div {
     position: relative;
     max-width: 100%;
     max-height: 100%;
-    margin-left: 2rem;
-    margin-right: 0;
+    margin: 0;
     padding: 0 1rem;
     width: calc(16vw + 8rem);
     height: calc(20vw + 10rem);
     max-width: calc(56vh - 4rem);
     max-height: calc(70vh - 5rem);
+    min-width: 17.6rem;
+    min-height: 22rem;
 }
 
 .popup .carousel-div img {
@@ -66,16 +67,18 @@
     width: min-content;
     height: 100%;
     transition: opacity 1s ease-out;
-    -webkit-transition: opacity 1s ease-out;  
+    -webkit-transition: opacity 1s ease-out;
     -moz-transition: opacity 1s ease-in-out;
     width: calc(16vw + 8rem);
     height: calc(20vw + 10rem);
     max-width: calc(56vh - 4rem);
     max-height: calc(70vh - 5rem);
+    min-width: 17.6rem;
+    min-height: 22rem;
 }
 
 .popup .carousel-div img.disabled {
-    opacity: 0; 
+    opacity: 0;
 }
 
 .popup .carousel-div button {
@@ -125,8 +128,12 @@
     flex-wrap: wrap;
     flex-direction: column;
     margin: 0;
-    padding: 0 1rem;
+    padding: 0 0 0 1rem;
     gap: 1rem;
+}
+
+.popup div.right * {
+    color: var(--black);
 }
 
 .popup div.right h1 {
@@ -136,10 +143,6 @@
     margin-top: -0.5rem;
     margin-left: 0;
     color: var(--white);
-}
-
-.popup div.right * {
-    color: var(--black);
 }
 
 .popup div.right select {
@@ -154,33 +157,34 @@
     padding: 0 0.25rem;
 }
 
-#button-and-price {
+#button-amount-price {
+    display: flex;
+    align-items: center;
+    gap: 2vw;
     margin: auto 0 0 0;
     padding: 0;
-    display: flex;
-    gap: 2rem;
 }
 
-#button-and-price button {
+#button-amount-price button {
     display: block;
-    font-size: large;
+    font-size: calc(0.5vw + 1rem);
     cursor: pointer;
     border: 1px solid var(--white);
     border-radius: 0.25rem;
     background-color: var(--orange);
     color: var(--white);
     transition: 0.2s;
-    padding: 0.5rem 1rem;
+    padding: calc(0.25vw + 0.25rem) calc(0.5vw + 0.5rem);
 }
 
-#button-and-price button:hover {
+#button-amount-price button:hover {
     color: var(--orange);
     background-color: var(--white);
     border-color: var(--orange);
     transition: 0.2s;
 }
 
-#button-and-price button:active {
+#button-amount-price button:active {
     border-width: 1px;
     background-color: var(--orange);
     border-color: var(--white);
@@ -188,14 +192,49 @@
     transition: 0.2s;
 }
 
-#button-and-price button.disabled {
+#button-amount-price button.disabled {
     display: none;
 }
 
-#button-and-price p {
-    font-size: 1.25rem;
+#button-amount-price p {
+    font-size: calc(0.5vw + 1rem);
     margin: 0.5rem 0;
     color: var(--white);
+    height: min-content;
+}
+
+#shop-popup .right .ticker {
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+#shop-popup .right .ticker.disabled,
+#shop-popup .right .ticker.show-on-small {
+    display: none;
+}
+
+#shop-popup .right .ticker * {
+    padding: calc(0.5vw - 0.25rem);
+    margin: 0;
+
+}
+
+#shop-popup .right .ticker p {
+    box-sizing: border-box;
+    text-align: center;
+    min-width: 2rem;
+    color: var(--white);
+}
+
+#shop-popup .right .ticker i {
+    cursor: pointer;
+}
+
+@media screen and (max-width: 60rem) {
+    #designs {
+        grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    }
 }
 
 @media screen and (max-width: 40rem) {
@@ -208,12 +247,20 @@
     }
 
     #shop-popup.popup {
+        flex-wrap: wrap;
         gap: 0.5rem;
         padding: 1.5rem;
     }
 
     .popup .carousel-div {
         margin: 0 auto;
+        min-width: 0;
+        min-height: 0;
+    }
+
+    .popup .carousel-div img {
+        min-width: 0;
+        min-height: 0;
     }
 
     .popup div.right {
@@ -233,19 +280,28 @@
         margin: 0 auto;
     }
 
-    #button-and-price {
+    #shop-popup .right .ticker.show-on-small {
+        display: flex;
+        margin-top: 0.5rem;
+    }
+
+    #shop-popup .right .ticker.hide-on-small {
+        display: none;
+    }
+
+    #button-amount-price {
         width: max-content;
-        margin: 0.5rem auto 0 auto;
+        margin: 0 auto;
         gap: 1rem;
 
     }
 
-    #button-and-price button {
+    #button-amount-price button {
         padding: 0.25rem 0.5rem;
         font-size: 1rem;
     }
 
-    #button-and-price p {
+    #button-amount-price p {
         font-size: 1rem;
     }
 }
@@ -259,19 +315,22 @@
         font-size: 1.5rem;
     }
 
-    #button-and-price {
+    #shop-popup .right .ticker.show-on-small {
+        margin-top: 0.25rem;
+    }
+
+    #button-amount-price {
         width: max-content;
-        margin: 0.25rem auto 0 auto;
         gap: 0.5rem;
 
     }
 
-    #button-and-price button {
+    #button-amount-price button {
         padding: 0.2rem 0.4rem;
         font-size: 0.75rem;
     }
 
-    #button-and-price p {
+    #button-amount-price p {
         font-size: 0.75rem;
     }
 }

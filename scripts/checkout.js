@@ -3,7 +3,6 @@ const stripe = Stripe("pk_live_51OWmciLC6GNfguQ7DYSri3A8PIewzevg7oGoPHJ8qHmLyPuW
 cart = JSON.parse(localStorage.getItem("cartCache"));
 let index = 0;
 let tax = 0;
-let price;
 
 
 function previousForm() {
@@ -38,17 +37,11 @@ function updateCart() {
     cart = JSON.parse(localStorage.getItem("cartCache"));
 }
 
-async function updatePrice() {
-    let products = getProductNames(cart);
-    price = (await getCartPrice(products));
-}
-
 async function updateFormFields() {
-    let productNames = getProductNames(cart);
     const response = await fetch(serverURL + "/createCheckoutSession", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ products: productNames }),
+        body: JSON.stringify({ cart: cart }),
     });
 
     const { clientSecret } = await response.json();
@@ -64,6 +57,5 @@ async function updateFormFields() {
 //Window on load
 window.addEventListener("load", async () => {
     updateCart();
-    await updatePrice();
     await updateFormFields();
 });

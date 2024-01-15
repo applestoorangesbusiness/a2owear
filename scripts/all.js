@@ -20,6 +20,7 @@ let USDollar = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
 });
+const maxItemAmount = 10;
 
 function showSignUp() { };
 function showLogIn() { };
@@ -41,8 +42,6 @@ shoppingCartMenuShadowE.addEventListener("click", closeShoppingCartMenu);
 async function updateShoppingCartMenu() {
     checkoutLocation = htmlFolderLocation + "/checkout.html";
 
-    (shoppingCartMenu.querySelector("button") ? shoppingCartMenu.querySelector("button").remove() : {});
-    document.getElementById("checkout-button    -and-price") ? document.getElementById("checkout-button-and-price").remove() : {};
     shoppingCartItemsDiv.querySelectorAll("div").forEach(shoppingCartItem => {
         shoppingCartItem.remove();
     })
@@ -57,8 +56,7 @@ async function updateShoppingCartMenu() {
 
     shoppingCartItemsDiv.before(h1);
 
-    let i = 0;
-    cart.forEach(item => {
+    cart.forEach((item, i) => {
         let itemE = document.createElement("div");
 
         const p = document.createElement("p");
@@ -68,10 +66,46 @@ async function updateShoppingCartMenu() {
         const img = document.createElement("img");
         img.src = `https://applestooranges.s3.amazonaws.com/${spaceToDashLower(item.design)}-${spaceToDashLower(item.product)}${item.mods ? ("color" in item.mods ? "-" + spaceToDash(item.mods.color) + "-1" : "") : ""}.jpg`;
 
+        const ticker = document.createElement("div");
+        ticker.id = "ticker";
+
+        const minus = createMinusIcon("");
+        const amount = document.createElement("p");
+        amount.innerHTML = item.amount;
+        const plus = createPlusIcon("");
+
+        minus.addEventListener("click", async () => {
+            if (item.amount > 1) {
+                item.amount -= 1;
+                amount.innerHTML = item.amount;
+                cart[i] = item;
+                await updateShoppingCartMenu();
+                if (user) {
+                    await updateCartItemAt(item, user.email, i);
+                }
+            }
+        })
+
+        plus.addEventListener("click", async () => {
+            if (item.amount < maxItemAmount) {
+                item.amount += 1;
+                amount.innerHTML = item.amount;
+                cart[i] = item;
+                await updateShoppingCartMenu();
+                if (user) {
+                    await updateCartItemAt(item, user.email, i);
+                }
+            }
+        })
+
+        ticker.appendChild(minus);
+        ticker.appendChild(amount);
+        ticker.appendChild(plus);
+
         const trashIconBig = createTrashIcon("2x");
-        trashIconBig.classList.add("hide-on-x-small");
+        trashIconBig.classList.add("hide-on-small");
         const trashIcon = createTrashIcon("lg");
-        trashIcon.classList.add("show-on-x-small");
+        trashIcon.classList.add("show-on-small");
 
         let j = i;
 
@@ -90,36 +124,48 @@ async function updateShoppingCartMenu() {
 
         itemE.appendChild(img);
         itemE.appendChild(p);
+        itemE.appendChild(ticker);
         itemE.appendChild(trashIconBig);
         itemE.appendChild(trashIcon);
 
         shoppingCartItemsDiv.appendChild(itemE);
-
-        i++;
     })
 
-    const checkoutButtonAndPrice = document.createElement("div");
-    checkoutButtonAndPrice.id = "checkout-button-and-price";
+    let checkoutButtonAndPrice;
 
-    const checkoutButton = document.createElement("button");
-    checkoutButton.innerHTML = "Checkout";
+    if (document.getElementById("checkout-button-and-price")) {
+        checkoutButtonAndPrice = document.getElementById("checkout-button-and-price");
 
-    checkoutButton.addEventListener("click", () => {
-        window.location = htmlFolderLocation + "/checkout.html";
-    });
+        const price = checkoutButtonAndPrice.querySelector("p");
 
-    if (cart.length < 1) {
-        checkoutButton.classList.add("disabled");
+        price.innerHTML = USDollar.format(await getCartPrice(cart));
+    } else {
+        checkoutButtonAndPrice = document.createElement("div");
+        checkoutButtonAndPrice.id = "checkout-button-and-price";
+
+        const checkoutButton = document.createElement("button");
+        checkoutButton.innerHTML = "Checkout";
+        checkoutButton.id = "checkout-button";
+
+        checkoutButton.addEventListener("click", () => {
+            window.location = htmlFolderLocation + "/checkout.html";
+        });
+
+        const price = document.createElement("p");
+
+        checkoutButtonAndPrice.appendChild(checkoutButton);
+        checkoutButtonAndPrice.appendChild(price);
+
+        shoppingCartMenu.appendChild(checkoutButtonAndPrice);
+
+        price.innerHTML = USDollar.format(await getCartPrice(cart));
     }
 
-    const price = document.createElement("p");
-
-    checkoutButtonAndPrice.appendChild(checkoutButton);
-    checkoutButtonAndPrice.appendChild(price);
-
-    shoppingCartMenu.appendChild(checkoutButtonAndPrice);
-
-    price.innerHTML = USDollar.format(await getCartPrice(getProductNames(cart)));
+    if (cart.length < 1) {
+        checkoutButtonAndPrice.classList.add("disabled");
+    } else {
+        checkoutButtonAndPrice.classList.remove("disabled");
+    }
 }
 
 function setUpSignUp() {
@@ -615,7 +661,15 @@ async function getProductImages() {
         });
 }
 
-async function addToCart(product, design, mods) {
+async function addToCart(product, design, mods, amount) {
+    if (!amount || typeof amount !== "number" || amount < 1) {
+        amount = 1;
+    } else if (amount > maxItemAmount) {
+        amount = maxItemAmount;
+    }
+    if (!mods) {
+        mods = {};
+    }
     if (user) {
         fetch(serverURL + "/addToCart", {
             method: "POST",
@@ -627,7 +681,8 @@ async function addToCart(product, design, mods) {
                 item: {
                     product: product,
                     design: design,
-                    mods: mods
+                    mods: mods,
+                    amount: amount
                 }
             })
         })
@@ -718,14 +773,14 @@ async function deleteCartItemAt(index) {
     return;
 }
 
-async function getCartPrice(products) {
+async function getCartPrice(cart) {
     return await fetch(serverURL + "/cartPrice", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            products: products
+            cart: cart
         })
     })
         .then(response => {
@@ -759,6 +814,30 @@ async function getProductPrice(product) {
             console.error('Error:', error);
         });
 }
+
+async function updateCartItemAt(item, email, index) {
+    return await fetch(serverURL + "/cartItemAt", {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            item: item,
+            email: email,
+            index: index
+        })
+    })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            return data;
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
+
 //Useful functions
 function spaceToDash(string) {
     let newString = "";
@@ -831,18 +910,10 @@ function closeShoppingCartMenu() {
     shoppingCartMenuShadowE.remove()
 }
 
-function getProductNames(cart) {
-    let products = [];
-    cart.forEach(item => {
-        products.push(item.product);
-    });
-    return products;
-}
-
 //DOM Elements
 function createIcon(type, size) {
     const i = document.createElement("i");
-    i.classList.add("add-icon", "fa-solid", "fa-" + type);
+    i.classList.add("fa-solid", "fa-" + type);
     if (size !== "") {
         i.classList.add("fa-" + size);
     }
@@ -851,6 +922,14 @@ function createIcon(type, size) {
 
 function createTrashIcon(size) {
     return createIcon("trash", size);
+}
+
+function createPlusIcon(size) {
+    return createIcon("plus", size);
+}
+
+function createMinusIcon(size) {
+    return createIcon("minus", size);
 }
 
 //Window on load

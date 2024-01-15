@@ -183,14 +183,87 @@ function createDesign(thisDesign) {
             }
         }
 
-        const buttonAndPrice = document.createElement("div");
-        buttonAndPrice.id = "button-and-price";
+        const buttonAmountPrice = document.createElement("div");
+        buttonAmountPrice.id = "button-amount-price";
 
         let USDollar = new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
         });
         const price = document.createElement("p");
+
+        const ticker1 = document.createElement("div");
+        ticker1.classList.add("disabled", "ticker", "hide-on-small");
+
+        const ticker2 = document.createElement("div");
+        ticker2.classList.add("disabled", "ticker", "show-on-small");
+
+        const minus1 = createMinusIcon("");
+
+        const amount1 = document.createElement("p");
+        amount1.innerHTML = "1";
+
+        const plus1 = createPlusIcon("");
+
+        const minus2 = createMinusIcon("");
+
+        const amount2 = document.createElement("p");
+        amount2.innerHTML = "1";
+
+        const plus2 = createPlusIcon("");
+
+        ticker1.appendChild(minus1);
+        ticker1.appendChild(amount1);
+        ticker1.appendChild(plus1);
+
+        ticker2.appendChild(minus2);
+        ticker2.appendChild(amount2);
+        ticker2.appendChild(plus2);
+
+        function updatePrice(productSelect) {
+            products.forEach(product => {
+                if (product.name === productSelect.value) {
+                    price.innerHTML = USDollar.format((product.price + product.price * product.discount / 100) * parseInt(amount1.innerHTML, 10));
+                }
+            })
+            if (productSelect.value === "") {
+                price.innerHTML = "";
+            }
+        }
+
+        function productChosenOrAmountChanged(productSelect) {
+            popupRight.querySelectorAll(".mod-select").forEach(modSelect => {
+                modSelect.remove();
+            })
+            modSelectValues = {};
+            updateCarouselDiv(productSelect.value, modSelectValues);
+            products.forEach(product => {
+                if (product.name === productSelect.value) {
+                    let modSelects = createModSelects(product.mods);
+
+                    updatePrice(productSelect);
+                    ticker1.classList.remove("disabled");
+                    ticker2.classList.remove("disabled");
+
+                    if (modSelects.length == 0) {
+                        return;
+                    }
+                    modSelects.forEach(modSelect => {
+                        ticker2.before(modSelect);
+                    })
+                }
+            })
+
+            if (productSelect.value === "") {
+                price.innerHTML = "";
+                ticker1.classList.add("disabled");
+                ticker2.classList.add("disabled");
+            }
+
+            checkIfFilledOut();
+
+            productSelectValue = productSelect.value;
+        }
 
         function createProductSelect() {
             const productSelect = document.createElement("select");
@@ -207,34 +280,48 @@ function createDesign(thisDesign) {
             });
 
             productSelect.addEventListener("change", () => {
-                popupRight.querySelectorAll(".mod-select").forEach(modSelect => {
-                    modSelect.remove();
-                })
-                modSelectValues = {};
-                updateCarouselDiv(productSelect.value, modSelectValues);
-                products.forEach(product => {
-                    if (product.name === productSelect.value) {
-                        let modSelects = createModSelects(product.mods);
-
-                        price.innerHTML = USDollar.format(product.price + product.price * product.discount / 100);
-
-                        if (modSelects.length == 0) {
-                            return;
-                        }
-                        modSelects.forEach(modSelect => {
-                            buttonAndPrice.before(modSelect);
-                        })
-                    }
-                })
-
-                if (productSelect.value === "") {
-                    price.innerHTML = " ";
-                }
-
-                checkIfFilledOut();
-
-                productSelectValue = productSelect.value;
+                productChosenOrAmountChanged(productSelect);
             });
+
+            minus1.addEventListener("click", () => {
+                let total = parseInt(amount1.innerHTML, 10);
+                if (total > 1) {
+                    total--;
+                    amount1.innerHTML = total;
+                    amount2.innerHTML = total;
+                }
+                updatePrice(productSelect);
+            })
+
+            plus1.addEventListener("click", () => {
+                let total = parseInt(amount1.innerHTML, 10);
+                if (total < maxItemAmount) {
+                    total++;
+                    amount1.innerHTML = total;
+                    amount2.innerHTML = total;
+                }
+                updatePrice(productSelect);
+            })
+
+            minus2.addEventListener("click", () => {
+                let total = parseInt(amount2.innerHTML, 10);
+                if (total > 1) {
+                    total--;
+                    amount1.innerHTML = total;
+                    amount2.innerHTML = total;
+                }
+                updatePrice(productSelect);
+            })
+
+            plus2.addEventListener("click", () => {
+                let total = parseInt(amount2.innerHTML, 10);
+                if (total < maxItemAmount) {
+                    total++;
+                    amount1.innerHTML = total;
+                    amount2.innerHTML = total;
+                }
+                updatePrice(productSelect);
+            })
 
             return productSelect;
         }
@@ -291,18 +378,20 @@ function createDesign(thisDesign) {
         addToCartButton.classList.add("disabled");
 
         addToCartButton.addEventListener("click", async () => {
-            await addToCart(productSelectValue, thisDesign.name, modSelectValues);
+            await addToCart(productSelectValue, thisDesign.name, modSelectValues, parseInt(amount1.innerHTML, 10));
             removeShopPopup();
             popUpShade.remove();
             openShoppingCartMenu();
         })
 
-        buttonAndPrice.appendChild(addToCartButton);
-        buttonAndPrice.appendChild(price);
+        buttonAmountPrice.appendChild(addToCartButton);
+        buttonAmountPrice.appendChild(ticker1);
+        buttonAmountPrice.appendChild(price);
 
         popupRight.appendChild(h1);
         popupRight.appendChild(createProductSelect());
-        popupRight.appendChild(buttonAndPrice);
+        popupRight.appendChild(ticker2);
+        popupRight.appendChild(buttonAmountPrice);
 
         popupE.appendChild(carouselDiv);
         popupE.appendChild(popupRight);

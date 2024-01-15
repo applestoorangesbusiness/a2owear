@@ -45,6 +45,7 @@ section {
     text-decoration: none;
     width: max-content;
     height: max-content;
+    align-self: flex-start;
 }
 
 #content button:hover {
