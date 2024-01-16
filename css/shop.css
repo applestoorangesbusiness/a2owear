@@ -196,6 +196,10 @@
     display: none;
 }
 
+#button-amount-price.disabled button {
+    transition: 0s;
+}
+
 #button-amount-price p {
     font-size: calc(0.5vw + 1rem);
     margin: 0.5rem 0;
@@ -229,6 +233,17 @@
 
 #shop-popup .right .ticker i {
     cursor: pointer;
+}
+
+.popup div.right .out-of-stock-message {
+    font-size: 1.5rem;
+    color: var(--white);
+    margin-top: auto;
+    margin-bottom: 0;
+}
+
+.popup div.right .out-of-stock-message.disabled {
+    display: none;
 }
 
 @media screen and (max-width: 60rem) {
@@ -304,6 +319,11 @@
     #button-amount-price p {
         font-size: 1rem;
     }
+
+    .popup div.right .out-of-stock-message {
+        width: max-content;
+        margin: 0 auto;
+    }
 }
 
 @media screen and (max-width: 20rem) {
@@ -332,5 +352,9 @@
 
     #button-amount-price p {
         font-size: 0.75rem;
+    }
+
+    .popup div.right .out-of-stock-message {
+        font-size: 8vw;
     }
 }

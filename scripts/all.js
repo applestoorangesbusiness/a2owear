@@ -1,5 +1,5 @@
-const serverURL = "https://drawourpets-35dc297e02d2.herokuapp.com";
-//const serverURL = "http://localhost:16332"
+//const serverURL = "https://drawourpets-35dc297e02d2.herokuapp.com";
+const serverURL = "http://localhost:16332"
 const newLineE = document.createElement("br");
 const accountButtonE = document.getElementById("account-button");
 const accountIconE = document.getElementById("account-icon");
@@ -39,6 +39,31 @@ const shoppingCartItemsDiv = document.getElementById("shopping-cart-items");
 shoppingCartMenuShadowE.id = "shopping-cart-menu-shadow";
 shoppingCartMenuShadowE.addEventListener("click", closeShoppingCartMenu);
 
+function removeDuplicates(list) {
+    return list.filter((value, index) => list.indexOf(value) === index);
+}
+
+function listList(list) {
+    let result = "";
+    if (list.length == 1) {
+        return list[0];
+    } else if (list.length == 2) {
+        return `${list[0]} and ${list[1]}`;
+    } else {
+        for (let i = 0; i < list.length; i++) {
+            if (i != 0) {
+                if (i != list.length - 1) {
+                    result += ", ";
+                } else {
+                    result += ", and ";
+                }
+            }
+            result += list[i];
+        }
+    }
+    return result;
+}
+
 async function updateShoppingCartMenu() {
     checkoutLocation = htmlFolderLocation + "/checkout.html";
 
@@ -54,7 +79,11 @@ async function updateShoppingCartMenu() {
         h1.innerHTML = "Shopping Cart";
     }
 
+    const outOfStockMessage = shoppingCartMenu.querySelector("p.out-of-stock-message") ? shoppingCartMenu.querySelector("p.out-of-stock-message") : document.createElement("p");
+    outOfStockMessage.classList.add("out-of-stock-message", "disabled");
+
     shoppingCartItemsDiv.before(h1);
+    shoppingCartItemsDiv.before(outOfStockMessage);
 
     cart.forEach((item, i) => {
         let itemE = document.createElement("div");
@@ -147,8 +176,21 @@ async function updateShoppingCartMenu() {
         checkoutButton.innerHTML = "Checkout";
         checkoutButton.id = "checkout-button";
 
-        checkoutButton.addEventListener("click", () => {
-            window.location = htmlFolderLocation + "/checkout.html";
+        checkoutButton.addEventListener("click", async () => {
+            let cartIsAvailable = await isCartAvailable();
+            if (cartIsAvailable === true) {
+                window.location = htmlFolderLocation + "/checkout.html";
+            } else {
+                let outOfStockProducts = [];
+                cartIsAvailable.forEach(item => {
+                    outOfStockProducts.push(item.product);
+                });
+
+                outOfStockProducts = removeDuplicates(outOfStockProducts);
+
+                outOfStockMessage.innerHTML = `${listList((outOfStockProducts))} ${outOfStockProducts.length == 1 ? "is" : "are"} out of stock`;
+                outOfStockMessage.classList.remove("disabled");
+            }
         });
 
         const price = document.createElement("p");
@@ -832,6 +874,29 @@ async function updateCartItemAt(item, email, index) {
         })
         .then(data => {
             return data;
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
+
+async function isCartAvailable() {
+    console.log("cart", cart)
+    return await fetch(serverURL + "/cartAvailable", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            cart: cart
+        })
+    })
+        .then(response => {
+            if (response.status == 200) {
+                return true;
+            } else if (response.status == 409) {
+                return response.json();
+            }
         })
         .catch((error) => {
             console.error('Error:', error);

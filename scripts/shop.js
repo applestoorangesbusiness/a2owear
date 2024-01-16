@@ -77,6 +77,7 @@ function createDesign(thisDesign) {
         let productSelectValue = "";
         let modSelectValues = {};
         let stillPopedup = true;
+        let thisProduct;
 
         const popupE = document.createElement("div");
         popupE.classList.add("popup");
@@ -231,7 +232,18 @@ function createDesign(thisDesign) {
             }
         }
 
-        function productChosenOrAmountChanged(productSelect) {
+        let increaseTickerAmount = () => {
+            console.log(3);
+        };
+        let decreaseTickerAmount = () => { };
+        minus1.addEventListener("click", decreaseTickerAmount, false);
+        minus2.addEventListener("click", decreaseTickerAmount, false);
+        plus1.addEventListener("click", increaseTickerAmount, false);
+        plus2.addEventListener("click", increaseTickerAmount, false);
+
+        const outOfStockMessage = document.createElement("p");
+
+        function productChosen(productSelect) {
             popupRight.querySelectorAll(".mod-select").forEach(modSelect => {
                 modSelect.remove();
             })
@@ -239,18 +251,62 @@ function createDesign(thisDesign) {
             updateCarouselDiv(productSelect.value, modSelectValues);
             products.forEach(product => {
                 if (product.name === productSelect.value) {
-                    let modSelects = createModSelects(product.mods);
+                    if (product.stock > 1) {
+                        buttonAmountPrice.classList.remove("disabled");
+                        outOfStockMessage.classList.add("disabled");
 
-                    updatePrice(productSelect);
-                    ticker1.classList.remove("disabled");
-                    ticker2.classList.remove("disabled");
+                        let modSelects = createModSelects(product.mods);
 
-                    if (modSelects.length == 0) {
-                        return;
+                        updatePrice(productSelect);
+                        ticker1.classList.remove("disabled");
+                        ticker2.classList.remove("disabled");
+
+                        minus1.removeEventListener("click", decreaseTickerAmount, false);
+                        minus2.removeEventListener("click", decreaseTickerAmount, false);
+                        plus1.removeEventListener("click", increaseTickerAmount, false);
+                        plus2.removeEventListener("click", increaseTickerAmount, false);
+
+                        let thisMaxItemAmount = maxItemAmount;
+
+                        increaseTickerAmount = () => {
+                            let total = parseInt(amount1.innerHTML, 10);
+                            if (total < thisMaxItemAmount) {
+                                total++;
+                                amount1.innerHTML = total;
+                                amount2.innerHTML = total;
+                            } else {
+                                amount1.innerHTML = thisMaxItemAmount;
+                                amount2.innerHTML = thisMaxItemAmount;
+                            }
+                            updatePrice(productSelect);
+                        }
+
+                        decreaseTickerAmount = () => {
+                            let total = parseInt(amount1.innerHTML, 10);
+                            if (total > 1) {
+                                total--;
+                                amount1.innerHTML = total;
+                                amount2.innerHTML = total;
+                            }
+                            updatePrice(productSelect);
+                        }
+
+
+                        minus1.addEventListener("click", decreaseTickerAmount, false);
+                        minus2.addEventListener("click", decreaseTickerAmount, false);
+                        plus1.addEventListener("click", increaseTickerAmount, false);
+                        plus2.addEventListener("click", increaseTickerAmount, false);
+
+                        if (modSelects.length == 0) {
+                            return;
+                        }
+                        modSelects.forEach(modSelect => {
+                            ticker2.before(modSelect);
+                        })
+                    } else {
+                        buttonAmountPrice.classList.add("disabled");
+                        outOfStockMessage.classList.remove("disabled");
                     }
-                    modSelects.forEach(modSelect => {
-                        ticker2.before(modSelect);
-                    })
                 }
             })
 
@@ -258,6 +314,7 @@ function createDesign(thisDesign) {
                 price.innerHTML = "";
                 ticker1.classList.add("disabled");
                 ticker2.classList.add("disabled");
+                outOfStockMessage.classList.add("disabled");
             }
 
             checkIfFilledOut();
@@ -280,48 +337,8 @@ function createDesign(thisDesign) {
             });
 
             productSelect.addEventListener("change", () => {
-                productChosenOrAmountChanged(productSelect);
+                productChosen(productSelect);
             });
-
-            minus1.addEventListener("click", () => {
-                let total = parseInt(amount1.innerHTML, 10);
-                if (total > 1) {
-                    total--;
-                    amount1.innerHTML = total;
-                    amount2.innerHTML = total;
-                }
-                updatePrice(productSelect);
-            })
-
-            plus1.addEventListener("click", () => {
-                let total = parseInt(amount1.innerHTML, 10);
-                if (total < maxItemAmount) {
-                    total++;
-                    amount1.innerHTML = total;
-                    amount2.innerHTML = total;
-                }
-                updatePrice(productSelect);
-            })
-
-            minus2.addEventListener("click", () => {
-                let total = parseInt(amount2.innerHTML, 10);
-                if (total > 1) {
-                    total--;
-                    amount1.innerHTML = total;
-                    amount2.innerHTML = total;
-                }
-                updatePrice(productSelect);
-            })
-
-            plus2.addEventListener("click", () => {
-                let total = parseInt(amount2.innerHTML, 10);
-                if (total < maxItemAmount) {
-                    total++;
-                    amount1.innerHTML = total;
-                    amount2.innerHTML = total;
-                }
-                updatePrice(productSelect);
-            })
 
             return productSelect;
         }
@@ -388,10 +405,14 @@ function createDesign(thisDesign) {
         buttonAmountPrice.appendChild(ticker1);
         buttonAmountPrice.appendChild(price);
 
+        outOfStockMessage.innerHTML = "Out of stock";
+        outOfStockMessage.classList.add("disabled", "out-of-stock-message");
+
         popupRight.appendChild(h1);
         popupRight.appendChild(createProductSelect());
         popupRight.appendChild(ticker2);
         popupRight.appendChild(buttonAmountPrice);
+        popupRight.appendChild(outOfStockMessage);
 
         popupE.appendChild(carouselDiv);
         popupE.appendChild(popupRight);
