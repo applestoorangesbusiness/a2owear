@@ -44,7 +44,7 @@ async function initialize() {
         console.error("error.message: " + error.message);
       })
 
-    await fetch(serverURL + '/cartPurchased', {
+    await fetch(serverURL + '/cart', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
