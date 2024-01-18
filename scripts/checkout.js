@@ -37,6 +37,14 @@ function updateCart() {
     cart = JSON.parse(localStorage.getItem("cartCache"));
 }
 
+async function redirectIfItemOutOfStock() {
+    let cartIsAvailable = await isCartAvailable();
+    if (cartIsAvailable !== true) {
+        window.location = "./shop.html";
+    }
+    return;
+}
+
 async function updateFormFields() {
     const response = await fetch(serverURL + "/createCheckoutSession", {
         method: "POST",
@@ -57,5 +65,6 @@ async function updateFormFields() {
 //Window on load
 window.addEventListener("load", async () => {
     updateCart();
+    await redirectIfItemOutOfStock();
     await updateFormFields();
 });

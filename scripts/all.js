@@ -1,5 +1,5 @@
-//const serverURL = "https://drawourpets-35dc297e02d2.herokuapp.com";
-const serverURL = "http://localhost:16332"
+const serverURL = "https://drawourpets-35dc297e02d2.herokuapp.com";
+//const serverURL = "http://localhost:16332"
 const newLineE = document.createElement("br");
 const accountButtonE = document.getElementById("account-button");
 const accountIconE = document.getElementById("account-icon");
@@ -65,12 +65,12 @@ function listList(list) {
 }
 
 async function updateShoppingCartMenu() {
-    checkoutLocation = htmlFolderLocation + "/checkout.html";
-
     shoppingCartItemsDiv.querySelectorAll("div").forEach(shoppingCartItem => {
         shoppingCartItem.remove();
     })
 
+    let checkoutButtonAndPrice;
+    let checkoutButton = document.getElementById("checkout-button") ? document.getElementById("checkout-button") : document.createElement("button");
 
     const h1 = shoppingCartMenu.querySelector("h1") ? shoppingCartMenu.querySelector("h1") : document.createElement("h1");
     if (cart.length == 0) {
@@ -81,6 +81,7 @@ async function updateShoppingCartMenu() {
 
     const outOfStockMessage = shoppingCartMenu.querySelector("p.out-of-stock-message") ? shoppingCartMenu.querySelector("p.out-of-stock-message") : document.createElement("p");
     outOfStockMessage.classList.add("out-of-stock-message", "disabled");
+    checkoutButton.classList.remove("disabled");
 
     shoppingCartItemsDiv.before(h1);
     shoppingCartItemsDiv.before(outOfStockMessage);
@@ -160,8 +161,6 @@ async function updateShoppingCartMenu() {
         shoppingCartItemsDiv.appendChild(itemE);
     })
 
-    let checkoutButtonAndPrice;
-
     if (document.getElementById("checkout-button-and-price")) {
         checkoutButtonAndPrice = document.getElementById("checkout-button-and-price");
 
@@ -172,7 +171,6 @@ async function updateShoppingCartMenu() {
         checkoutButtonAndPrice = document.createElement("div");
         checkoutButtonAndPrice.id = "checkout-button-and-price";
 
-        const checkoutButton = document.createElement("button");
         checkoutButton.innerHTML = "Checkout";
         checkoutButton.id = "checkout-button";
 
@@ -190,6 +188,7 @@ async function updateShoppingCartMenu() {
 
                 outOfStockMessage.innerHTML = `${listList((outOfStockProducts))} ${outOfStockProducts.length == 1 ? "is" : "are"} out of stock`;
                 outOfStockMessage.classList.remove("disabled");
+                checkoutButton.classList.add("disabled");
             }
         });
 
@@ -881,7 +880,6 @@ async function updateCartItemAt(item, email, index) {
 }
 
 async function isCartAvailable() {
-    console.log("cart", cart)
     return await fetch(serverURL + "/cartAvailable", {
         method: "POST",
         headers: {
